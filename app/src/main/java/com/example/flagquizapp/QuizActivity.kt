@@ -3,6 +3,7 @@ package com.example.flagquizapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import com.example.flagquizapp.databinding.ActivityMainBinding
 import com.example.flagquizapp.databinding.ActivityQuizBinding
 
@@ -29,25 +30,77 @@ class QuizActivity : AppCompatActivity() {
         questions = Flagsdao().getRandomFiveFlags(vt)
         UploadQuestion()
         binding.buttonA.setOnClickListener {
+            TrueControl(binding.buttonA)
+            ControlQuestionCount()
+        }
+        binding.buttonB.setOnClickListener {
+            TrueControl(binding.buttonB)
+            ControlQuestionCount()
+        }
+        binding.buttonC.setOnClickListener {
+            TrueControl(binding.buttonC)
+            ControlQuestionCount()
+        }
+        binding.buttonD.setOnClickListener {
+            TrueControl(binding.buttonD)
             ControlQuestionCount()
         }
     }
 
-    fun UploadQuestion(){
-        binding.textViewQuestionNumber.text = "Question ${questionCount+1}"
+    fun UploadQuestion() {
+        binding.textViewQuestionNumber.text = "Question ${questionCount + 1}"
         trueQuestion = questions.get(questionCount)
 
-        binding.imageViewFlag.setImageResource(resources.getIdentifier(trueQuestion.bayrak_resim,"drawable", packageName))
+        binding.imageViewFlag.setImageResource(
+            resources.getIdentifier(
+                trueQuestion.bayrak_resim,
+                "drawable",
+                packageName
+            )
+        )
+
+        falseAnswer = Flagsdao().getRandomFalseThreeFlags(vt, trueQuestion.bayrak_id)
+
+        allAnswers = HashSet()
+        allAnswers.add(trueQuestion)
+        allAnswers.add(falseAnswer.get(0))
+        allAnswers.add(falseAnswer.get(1))
+        allAnswers.add(falseAnswer.get(2))
+
+        binding.buttonA.text = allAnswers.elementAt(0).bayrak_ad
+        binding.buttonB.text = allAnswers.elementAt(1).bayrak_ad
+        binding.buttonC.text = allAnswers.elementAt(2).bayrak_ad
+        binding.buttonD.text = allAnswers.elementAt(3).bayrak_ad
+
+
     }
 
-    fun ControlQuestionCount(){
+    fun ControlQuestionCount() {
         questionCount++
-        if (questionCount != 5){
+        if (questionCount != 5) {
             UploadQuestion()
-        }
-        else{
-            startActivity(Intent(this@QuizActivity, ResultActivity::class.java))
+        } else {
+            val intent = Intent(this@QuizActivity, ResultActivity::class.java)
+            intent.putExtra("trueCount",trueCount)
+
+            startActivity(intent)
             finish()
         }
+    }
+
+    fun TrueControl(button: Button) {
+        val buttonText = button.text.toString()
+        val trueAnswer = trueQuestion.bayrak_ad
+
+        if (buttonText == trueAnswer) {
+            trueCount++
+        } else {
+            falseCount++
+        }
+
+        binding.textViewTrue.text = "True: $trueCount"
+        binding.textViewFalse.text = "False: $falseCount"
+
+
     }
 }
