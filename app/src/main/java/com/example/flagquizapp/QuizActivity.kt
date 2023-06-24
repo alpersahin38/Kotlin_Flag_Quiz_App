@@ -9,6 +9,8 @@ import com.example.flagquizapp.databinding.ActivityQuizBinding
 class QuizActivity : AppCompatActivity() {
     private lateinit var binding: ActivityQuizBinding
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
