@@ -8,7 +8,15 @@ import com.example.flagquizapp.databinding.ActivityQuizBinding
 
 class QuizActivity : AppCompatActivity() {
     private lateinit var binding: ActivityQuizBinding
+    private lateinit var questions: ArrayList<Flags>
+    private lateinit var falseAnswer: ArrayList<Flags>
+    private lateinit var trueQuestion: Flags
+    private lateinit var allAnswers: HashSet<Flags>
+    private lateinit var vt: HelperDatabase
 
+    private var questionCount = 0
+    private var trueCount = 0
+    private var falseCount = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,9 +25,10 @@ class QuizActivity : AppCompatActivity() {
         binding = ActivityQuizBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-        binding.buttonA.setOnClickListener{
-            startActivity(Intent(this@QuizActivity,ResultActivity::class.java))
+        vt = HelperDatabase(this)
+   
+        binding.buttonA.setOnClickListener {
+            startActivity(Intent(this@QuizActivity, ResultActivity::class.java))
             finish()
         }
     }
