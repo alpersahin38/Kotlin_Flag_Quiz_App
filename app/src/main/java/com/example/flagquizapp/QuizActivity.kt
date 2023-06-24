@@ -26,8 +26,26 @@ class QuizActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         vt = HelperDatabase(this)
-   
+        questions = Flagsdao().getRandomFiveFlags(vt)
+        UploadQuestion()
         binding.buttonA.setOnClickListener {
+            ControlQuestionCount()
+        }
+    }
+
+    fun UploadQuestion(){
+        binding.textViewQuestionNumber.text = "Question ${questionCount+1}"
+        trueQuestion = questions.get(questionCount)
+
+        binding.imageViewFlag.setImageResource(resources.getIdentifier(trueQuestion.bayrak_resim,"drawable", packageName))
+    }
+
+    fun ControlQuestionCount(){
+        questionCount++
+        if (questionCount != 5){
+            UploadQuestion()
+        }
+        else{
             startActivity(Intent(this@QuizActivity, ResultActivity::class.java))
             finish()
         }
